@@ -10,6 +10,6 @@ cp -v ../deb-bluez-alsa-utils/out/*.deb dists/testing/main/binary-all/
 ./make-repo.sh
 
 git add .
-git commit -a -m 'Update bluez-alta'
+git commit -a -m 'Update bluez-alsa'
 git push
 

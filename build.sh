@@ -6,6 +6,7 @@ if [[ ! -f /.dockerenv ]] && [[ ! -f /run/.containerenv ]] ; then
     exit
 fi
 
+mkdir -p out
 rm -rf out/*
 
 export EMAIL="Mihai Craiu <mihaiush@gmail.com>"
