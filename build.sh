@@ -1,12 +1,17 @@
 #!/bin/bash -e
 
+if [ -z "$1" ] ; then
+    echo "$(basename $0) PATCH_SCRIPT"
+    exit 2
+fi
+
 cd $(dirname $0)
 
-. config
+. $1
 
 if [[ ! -f /.dockerenv ]] && [[ ! -f /run/.containerenv ]] ; then
     (podman kill deb_build && sleep 2) || true
-    podman run -ti --rm --name deb_build --mount type=bind,source="$(pwd)",target=/work -w /work debian_build:${DIST}-slim ./build.sh 
+    podman run -ti --rm --name deb_build --mount type=bind,source="$(pwd)",target=/work -w /work debian_build:${DIST}-slim ./build.sh $1
     exit
 fi
 
@@ -21,28 +26,19 @@ apt-get update
 apt-get -y dist-upgrade --auto-remove
 
 cd /tmp
+apt-get source $SRC
 
-apt-get source bluez-alsa-utils
-
-cd bluez-alsa-*
-
-# AAC
-sed -ri 's/dh_auto_configure --/dh_auto_configure -- --enable-aac/' debian/rules
-sed -ri 's/^Build-Depends: /Build-Depends: libfdk-aac-dev, /g' debian/control
-
-# APTX
-sed -ri 's/dh_auto_configure --/dh_auto_configure -- --enable-aptx --enable-aptx-hd --with-libopenaptx/' debian/rules
-sed -ri 's/^Build-Depends: /Build-Depends: libopenaptx-dev, /g' debian/control
+main
 
 dch -i ""
 dch -r ""
-cat debian/changelog
 echo | mk-build-deps -i
 debuild -uc -us -b
 
 cd /work
 cp -v /tmp/*.deb out/
 rm -f out/*dbgsym*
-cp config out/
+echo 'export DIST='$DIST >>out/config
+echo 'export SRC='$SRC >>out/config
 chown --reference=README.md -R out
 
