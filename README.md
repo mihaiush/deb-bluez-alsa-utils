@@ -1,2 +1,2 @@
-# deb-bluez-alsa-utils
-Enable extra codecs in bluez-alsa
+# deb-patch
+Patch debian packages.

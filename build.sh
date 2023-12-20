@@ -18,8 +18,10 @@ export EMAIL="Mihai Craiu <mihaiush@gmail.com>"
 cp /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian-src.sources
 sed -ri 's/Types: deb/Types: deb-src/g' /etc/apt/sources.list.d/debian-src.sources
 apt-get update
+apt-get -y dist-upgrade --auto-remove
 
 cd /tmp
+
 apt-get source bluez-alsa-utils
 
 cd bluez-alsa-*
@@ -32,8 +34,9 @@ sed -ri 's/^Build-Depends: /Build-Depends: libfdk-aac-dev, /g' debian/control
 sed -ri 's/dh_auto_configure --/dh_auto_configure -- --enable-aptx --enable-aptx-hd --with-libopenaptx/' debian/rules
 sed -ri 's/^Build-Depends: /Build-Depends: libopenaptx-dev, /g' debian/control
 
-dch -i "Enable extra codecs"
+dch -i ""
 dch -r ""
+cat debian/changelog
 echo | mk-build-deps -i
 debuild -uc -us -b
 
