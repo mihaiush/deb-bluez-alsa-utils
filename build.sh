@@ -1,8 +1,12 @@
-#!/bin/bash -ex
+#!/bin/bash -e
+
+cd $(dirname $0)
+
+. config
 
 if [[ ! -f /.dockerenv ]] && [[ ! -f /run/.containerenv ]] ; then
     (podman kill deb_build && sleep 2) || true
-    podman run -ti --rm --name deb_build --mount type=bind,source="$(pwd)",target=/work -w /work debian_build:testing-slim ./build.sh 
+    podman run -ti --rm --name deb_build --mount type=bind,source="$(pwd)",target=/work -w /work debian_build:${DIST}-slim ./build.sh 
     exit
 fi
 
@@ -36,5 +40,6 @@ debuild -uc -us -b
 cd /work
 cp -v /tmp/*.deb out/
 rm -f out/*dbgsym*
+cp config out/
 chown --reference=README.md -R out
 
