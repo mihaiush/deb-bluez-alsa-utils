@@ -34,5 +34,6 @@ debuild -uc -us -b
 
 cd /work
 cp -v /tmp/*.deb out/
+rm -f out/*dbgsym*
 chown --reference=README.md -R out
 
