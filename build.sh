@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/bin/bash 
+
+set -e
 
 if [ -z "$1" ] ; then
     echo "$(basename $0) PATCH_SCRIPT"
@@ -20,14 +22,21 @@ rm -rf out/*
 
 export EMAIL="Mihai Craiu <mihaiush@gmail.com>"
 
+# Add "src" repos
 cp /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian-src.sources
 sed -ri 's/Types: deb/Types: deb-src/g' /etc/apt/sources.list.d/debian-src.sources
+
 apt-get update
 apt-get -y dist-upgrade --auto-remove
 
 cd /tmp
 apt-get source $SRC
 
+# Autodetect build dir
+cd $(find . -name debian -type d | head -1)
+cd ..
+
+# From $1
 main
 
 dch -i ""

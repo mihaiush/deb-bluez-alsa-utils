@@ -3,7 +3,6 @@ export SRC=ffmpegfs
 
 main(){
 
-cd ffmpegfs-*
 cat >autocopy_strict.patch.b64 <<EOF
 ZGlmZiAtLWdpdCBhL3NyYy9mZm1wZWdfdHJhbnNjb2Rlci5jYyBiL3NyYy9mZm1wZWdfdHJhbnNj
 b2Rlci5jYwppbmRleCAzNmZhZTQwOC4uNDViZTM5MjEgMTAwNjQ0Ci0tLSBhL3NyYy9mZm1wZWdf
