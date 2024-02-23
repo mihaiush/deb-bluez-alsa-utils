@@ -21,13 +21,17 @@ mkdir -p out
 rm -rf out/*
 
 export EMAIL="Mihai Craiu <mihaiush@gmail.com>"
+export DEBIAN_FRONTEND=noninteractive
 
 # Add "src" repos
 cp /etc/apt/sources.list.d/debian.sources /etc/apt/sources.list.d/debian-src.sources
 sed -ri 's/Types: deb/Types: deb-src/g' /etc/apt/sources.list.d/debian-src.sources
+if [ -n "${SRC_DIST}" ] ; then
+    sed -ri "s/${DIST}/${SRC_DIST}/g" /etc/apt/sources.list.d/debian-src.sources
+fi
 
 apt-get update
-apt-get -y dist-upgrade --auto-remove
+apt-get -y dist-upgrade --auto-remove || true
 
 cd /tmp
 apt-get source $SRC
@@ -35,6 +39,7 @@ apt-get source $SRC
 # Autodetect build dir
 cd $(find . -name debian -type d | head -1)
 cd ..
+pwd
 
 # From $1
 main
