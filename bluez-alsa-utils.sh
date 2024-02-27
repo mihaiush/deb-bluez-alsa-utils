@@ -1,5 +1,6 @@
 export DIST=testing
 export SRC=bluez-alsa-utils
+export VERSION='r2'
 
 main(){
 

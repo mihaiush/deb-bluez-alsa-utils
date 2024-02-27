@@ -44,7 +44,11 @@ pwd
 # From $1
 main
 
-dch -i ""
+if [ -n "$VERSION" ] ; then
+    dch -l${VERSION} ""
+else
+    dch -i "" 
+fi
 dch -r ""
 echo | mk-build-deps -i
 debuild -uc -us -b
